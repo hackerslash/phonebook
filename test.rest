@@ -2,11 +2,11 @@ GET http://localhost:3001/api/persons
 
 
 ###
-GET http://localhost:3001/api/persons/3
+GET http://localhost:3001/api/persons/64d0ebeb9f18f8aa078851e8
 
 
 ###
-DELETE http://localhost:3001/api/persons/3
+DELETE http://localhost:3001/api/persons/64d0dca721679ab3ed8181a5
 
 
 ###
@@ -14,9 +14,13 @@ POST http://localhost:3001/api/persons HTTP/1.1
 Content-Type: application/json
 
 {
-    "name": "Md Afridi",
-    "number": "935-155-766-60"
+    "name": "Afridi",
+    "number": "9351557660"
 }
+
+###
+GET http://localhost:3001/info
+
 
 
 
