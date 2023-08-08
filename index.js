@@ -28,7 +28,7 @@ const unknownEndpoint = (request, response) => {
 };
 
 // morgan configuration
-morgan.token("body", (req, res) => JSON.stringify(req.body));
+morgan.token("body", (request) => JSON.stringify(request.body));
 app.use(morgan(":method :url :status :response-time ms - :body"));
 
 //Get data for all persons
@@ -69,10 +69,9 @@ app.get("/api/persons/:id", (request, response) => {
 //Delete a id
 app.delete("/api/persons/:id", (request, response, next) => {
   const id = request.params.id;
-  console.log(id);
 
   Person.findByIdAndRemove(id)
-    .then((result) => {
+    .then(() => {
       response.statusMessage = `Successfullt Deleted ${id}`;
       response.status(204).end();
     })
@@ -87,6 +86,8 @@ app.delete("/api/persons/:id", (request, response, next) => {
 //add a new entry
 app.post("/api/persons", (request, response, next) => {
   const body = request.body;
+
+  console.log(body);
 
   if (!body.name || !body.number) {
     return response.status(400).json({
