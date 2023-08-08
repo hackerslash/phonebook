@@ -15,6 +15,9 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === "CastError") {
     return response.status(400).send({ error: "malformatted id" });
+  } else if (error.name === "ValidationError") {
+    console.log("afridi");
+    return response.status(400).json({ error: error.message });
   }
 
   next(error);
@@ -82,7 +85,7 @@ app.delete("/api/persons/:id", (request, response, next) => {
 });
 
 //add a new entry
-app.post("/api/persons", (request, response) => {
+app.post("/api/persons", (request, response, next) => {
   const body = request.body;
 
   if (!body.name || !body.number) {
@@ -96,9 +99,12 @@ app.post("/api/persons", (request, response) => {
     number: body.number,
   });
 
-  newPerson.save().then((result) => {
-    response.json(result);
-  });
+  newPerson
+    .save()
+    .then((result) => {
+      response.json(result);
+    })
+    .catch((error) => next(error));
 });
 
 //handle update of an entry
@@ -109,7 +115,11 @@ app.put("/api/persons/:id", (req, res, next) => {
     number: req.body.number,
   };
 
-  Person.findByIdAndUpdate(req.params.id, newPerson, { new: true })
+  Person.findByIdAndUpdate(req.params.id, newPerson, {
+    new: true,
+    runValidators: true,
+    context: "query",
+  })
     .then((result) => {
       res.json(result);
     })
